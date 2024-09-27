@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Alura\\BoasPraticas\\": "src/"
+        }
+    },
+    "require": {
+        "ext-curl": "*"
+    }
+}
