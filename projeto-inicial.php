@@ -1,5 +1,9 @@
 <?php
 
+use Alura\BoasPraticas\Service\ShelterService;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
 echo '##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####' . PHP_EOL;
 
 try {
@@ -12,11 +16,12 @@ try {
         echo "5 -> Sair" . PHP_EOL;
 
         $opcaoEscolhida = trim(fgets(STDIN));
+        $shelterService = new ShelterService();
 
         if ($opcaoEscolhida == 1) {
-            listarAbrigos();
+            $shelterService->listarAbrigos();
         } else if ($opcaoEscolhida == 2) {
-            cadastrarAbrigo();
+            $shelterService->cadastrarAbrigo();
         } else if ($opcaoEscolhida == 3) {
             listarPetsDeAbrigo();
         } else if ($opcaoEscolhida == 4) {
@@ -31,40 +36,6 @@ try {
     echo "Finalizando o programa..." . PHP_EOL;
 } catch (Throwable $erro) {
     echo $erro->getMessage() . PHP_EOL;
-}
-
-function listarAbrigos(): void
-{
-    $responseBody = file_get_contents('https://66f610a1436827ced975d41f.mockapi.io/abrigos');
-    $jsonArray = json_decode($responseBody, true);
-    echo "Abrigos cadastrados:" . PHP_EOL;
-    foreach ($jsonArray as $abrigo) {
-        $id = $abrigo['id'];
-        $nome = $abrigo['nome'];
-        echo "$id - $nome" . PHP_EOL;
-    }
-}
-
-function cadastrarAbrigo(): void
-{
-    echo "Digite o nome do abrigo:" . PHP_EOL;
-    $nome = trim(fgets(STDIN));
-    echo "Digite o telefone do abrigo:" . PHP_EOL;
-    $telefone = trim(fgets(STDIN));
-    echo "Digite o email do abrigo:" . PHP_EOL;
-    $email = trim(fgets(STDIN));
-
-    $abrigo = compact('nome', 'telefone', 'email');
-
-    $url = 'https://66f610a1436827ced975d41f.mockapi.io/abrigos';
-    [$statusCode, $responseBody] = postRequest($url, $abrigo);
-
-    if ($statusCode < 400) {
-        echo "Abrigo cadastrado com sucesso!" . PHP_EOL;
-    } else {
-        echo "Erro ao cadastrar o abrigo:" . PHP_EOL;
-        echo $responseBody . PHP_EOL;
-    }
 }
 
 function listarPetsDeAbrigo(): void
