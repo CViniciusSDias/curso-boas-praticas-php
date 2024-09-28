@@ -39,7 +39,7 @@ try {
     echo $erro->getMessage() . PHP_EOL;
 }
 
-function postRequest(string $url, array $requestBody): array
+function postRequest(string $url, \JsonSerializable $requestBody): array
 {
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
