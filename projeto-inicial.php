@@ -14,14 +14,7 @@ try {
         $opcaoEscolhida = trim(fgets(STDIN));
 
         if ($opcaoEscolhida == 1) {
-            $responseBody = file_get_contents('https://66f610a1436827ced975d41f.mockapi.io/abrigos');
-            $jsonArray = json_decode($responseBody, true);
-            echo "Abrigos cadastrados:" . PHP_EOL;
-            foreach ($jsonArray as $abrigo) {
-                $id = $abrigo['id'];
-                $nome = $abrigo['nome'];
-                echo "$id - $nome" . PHP_EOL;
-            }
+            listarAbrigos();
         } else if ($opcaoEscolhida == 2) {
             echo "Digite o nome do abrigo:" . PHP_EOL;
             $nome = trim(fgets(STDIN));
@@ -107,4 +100,16 @@ try {
     echo "Finalizando o programa..." . PHP_EOL;
 } catch (Throwable $erro) {
     echo $erro->getMessage() . PHP_EOL;
+}
+
+function listarAbrigos(): void
+{
+    $responseBody = file_get_contents('https://66f610a1436827ced975d41f.mockapi.io/abrigos');
+    $jsonArray = json_decode($responseBody, true);
+    echo "Abrigos cadastrados:" . PHP_EOL;
+    foreach ($jsonArray as $abrigo) {
+        $id = $abrigo['id'];
+        $nome = $abrigo['nome'];
+        echo "$id - $nome" . PHP_EOL;
+    }
 }
