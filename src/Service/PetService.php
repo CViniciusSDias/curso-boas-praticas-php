@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Alura\BoasPraticas\Service;
 
+use Alura\BoasPraticas\Domain\Pet;
+
 class PetService
 {
     public function listarPetsDeAbrigo(): void
@@ -15,11 +17,26 @@ class PetService
             echo "Id não cadastrado!" . PHP_EOL;
             // continue;
         }
-        $jsonArray = json_decode($response, true);
+        $jsonArray = array_map(
+            function (array $pet): Pet
+            {
+                $petObject = new Pet(
+                    $pet['tipo'],
+                    $pet['nome'],
+                    $pet['raca'],
+                    intval($pet['idade']),
+                    $pet['cor'],
+                    floatval($pet['peso']),
+                );
+                $petObject->id = intval($pet['id']);
+
+                return $petObject;
+            },
+            json_decode($response, true),
+        );
         echo "Pets cadastrados:" . PHP_EOL;
         foreach ($jsonArray as $pet) {
-            extract($pet);
-            echo "$id - $tipo - $nome - $raca - $idade ano(s)" . PHP_EOL;
+            echo "{$pet->id} - {$pet->type} - {$pet->name} - {$pet->race} - {$pet->age} ano(s)" . PHP_EOL;
         }
     }
 
@@ -33,14 +50,14 @@ class PetService
 
         $arquivo = fopen($nomeArquivo, 'r');
         while ($campos = fgetcsv($arquivo)) {
-            $pet = [
-                'tipo' => $campos[0],
-                'nome' => $campos[1],
-                'raca' => $campos[2],
-                'idade' => $campos[3],
-                'cor' => $campos[4],
-                'peso' => $campos[5],
-            ];
+            $pet = new Pet(
+                type: $campos[0],
+                name: $campos[1],
+                race: $campos[2],
+                age: intval($campos[3]),
+                color: $campos[4],
+                weight: floatval($campos[5]),
+            );
 
             [$statusCode, $responseBody] = postRequest(
                 ShelterService::URL . "/$idOuNome/pets",
@@ -48,12 +65,12 @@ class PetService
             );
 
             if ($statusCode == 201) {
-                echo "Pet cadastrado com sucesso: $pet[nome]" . PHP_EOL;
+                echo "Pet cadastrado com sucesso: {$pet->name}" . PHP_EOL;
             } else if ($statusCode == 404) {
                 echo "Id do abrigo não encontrado!" . PHP_EOL;
                 break;
             } else {
-                echo "$statusCode - Erro ao cadastrar o pet: $pet[nome]" . PHP_EOL;
+                echo "$statusCode - Erro ao cadastrar o pet: {$pet->name}" . PHP_EOL;
                 echo $responseBody . PHP_EOL;
                 break;
             }

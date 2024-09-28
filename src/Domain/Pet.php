@@ -6,6 +6,8 @@ namespace Alura\BoasPraticas\Domain;
 
 class Pet implements \JsonSerializable
 {
+    public int $id;
+
     public function __construct(
         public readonly string $type,
         public readonly string $name,

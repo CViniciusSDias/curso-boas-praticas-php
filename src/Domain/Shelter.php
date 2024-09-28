@@ -6,6 +6,8 @@ namespace Alura\BoasPraticas\Domain;
 
 class Shelter implements \JsonSerializable
 {
+    public int $id;
+
     public function __construct(
         public readonly string $name,
         public readonly string $phone,

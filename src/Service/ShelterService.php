@@ -13,12 +13,21 @@ class ShelterService
     public function listarAbrigos(): void
     {
         $responseBody = file_get_contents(self::URL);
-        $jsonArray = json_decode($responseBody, true);
+
+        $jsonArray = array_map(
+            function (array $shelterArray): Shelter
+            {
+                $shelter = new Shelter($shelterArray['nome'], $shelterArray['telefone'], $shelterArray['email']);
+                $shelter->id = intval($shelterArray['id']);
+
+                return $shelter;
+            },
+            json_decode($responseBody, true)
+        );
+
         echo "Abrigos cadastrados:" . PHP_EOL;
-        foreach ($jsonArray as $abrigo) {
-            $id = $abrigo['id'];
-            $nome = $abrigo['nome'];
-            echo "$id - $nome" . PHP_EOL;
+        foreach ($jsonArray as $shelter) {
+            echo "{$shelter->id} - {$shelter->name}" . PHP_EOL;
         }
     }
 
