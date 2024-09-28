@@ -6,7 +6,7 @@ namespace Alura\BoasPraticas\Service;
 
 class ShelterService
 {
-    private const string URL = 'https://66f610a1436827ced975d41f.mockapi.io/abrigos';
+    public const string URL = 'https://66f610a1436827ced975d41f.mockapi.io/abrigos';
 
     public function listarAbrigos(): void
     {
