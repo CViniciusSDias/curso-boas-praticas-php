@@ -56,14 +56,9 @@ function cadastrarAbrigo(): void
 
     $abrigo = compact('nome', 'telefone', 'email');
 
-    $curl = curl_init('https://66f610a1436827ced975d41f.mockapi.io/abrigos');
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($abrigo));
-    curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    $url = 'https://66f610a1436827ced975d41f.mockapi.io/abrigos';
+    [$statusCode, $responseBody] = postRequest($url, $abrigo);
 
-    $responseBody = curl_exec($curl);
-    $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     if ($statusCode < 400) {
         echo "Abrigo cadastrado com sucesso!" . PHP_EOL;
     } else {
@@ -107,14 +102,11 @@ function importarPets(): void
             'cor' => $campos[4],
             'peso' => $campos[5],
         ];
-        $curl = curl_init("https://66f610a1436827ced975d41f.mockapi.io/abrigos/$idOuNome/pets");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($pet));
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
-        $responseBody = curl_exec($curl);
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        [$statusCode, $responseBody] = postRequest(
+            "https://66f610a1436827ced975d41f.mockapi.io/abrigos/$idOuNome/pets",
+            $pet
+        );
 
         if ($statusCode == 201) {
             echo "Pet cadastrado com sucesso: $pet[nome]" . PHP_EOL;
@@ -127,4 +119,18 @@ function importarPets(): void
             break;
         }
     }
+}
+
+function postRequest(string $url, array $requestBody): array
+{
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestBody));
+    curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
+    $responseBody = curl_exec($curl);
+    $responseStatusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    return [$responseStatusCode, $responseBody];
 }
