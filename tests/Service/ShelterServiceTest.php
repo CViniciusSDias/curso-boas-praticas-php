@@ -12,15 +12,23 @@ class ShelterServiceTest extends TestCase
     {
         $output = <<<OUTPUT
         Abrigos cadastrados:
-        1 - Dias de Pet
-        2 - Novo Abrigo
-        3 - Terceiro Abrigo
+        1 - Abrigo de teste
         
         OUTPUT;
 
         $this->expectOutputString($output);
 
-        $httpClient = new HttpClient();
+        $httpClient = $this->createStub(HttpClient::class);
+        $httpClient->method('get')
+            ->willReturn(json_encode([
+                [
+                    'id' => 1,
+                    'nome' => 'Abrigo de teste',
+                    'telefone' => '',
+                    'email' => '',
+                ]
+            ]));
+
         $shelterService = new ShelterService($httpClient);
         $shelterService->listarAbrigos();
     }

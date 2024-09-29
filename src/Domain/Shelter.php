@@ -19,7 +19,7 @@ class Shelter implements \JsonSerializable
     {
         return [
             'nome' => $this->name,
-            'email' => $this->name,
+            'email' => $this->email,
             'telefone' => $this->phone,
         ];
     }
