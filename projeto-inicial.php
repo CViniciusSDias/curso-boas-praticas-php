@@ -1,5 +1,10 @@
 <?php
 
+use Alura\BoasPraticas\Command\ImportPetsCommand;
+use Alura\BoasPraticas\Command\InvalidOptionCommand;
+use Alura\BoasPraticas\Command\ListPetsFromShelterCommand;
+use Alura\BoasPraticas\Command\ListSheltersCommand;
+use Alura\BoasPraticas\Command\NewShelterCommand;
 use Alura\BoasPraticas\Service\{HttpClient, PetService, ShelterService};
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -17,23 +22,18 @@ try {
 
         $opcaoEscolhida = trim(fgets(STDIN));
 
-        $httpClient = new HttpClient();
-        $shelterService = new ShelterService($httpClient);
-        $petService = new PetService($httpClient);
-
         if ($opcaoEscolhida == 1) {
-            $shelterService->listarAbrigos();
+            (new ListSheltersCommand())->execute();
         } else if ($opcaoEscolhida == 2) {
-            $shelterService->cadastrarAbrigo();
+            (new NewShelterCommand())->execute();
         } else if ($opcaoEscolhida == 3) {
-            $petService->listarPetsDeAbrigo();
+            (new ListPetsFromShelterCommand())->execute();
         } else if ($opcaoEscolhida == 4) {
-            $petService->importarPets();
+            (new ImportPetsCommand())->execute();
         } else if ($opcaoEscolhida == 5) {
             break;
         } else {
-            echo "NÚMERO INVÁLIDO!" . PHP_EOL;
-            $opcaoEscolhida = 0;
+            (new InvalidOptionCommand())->execute();
         }
     } while ($opcaoEscolhida != 5);
     echo "Finalizando o programa..." . PHP_EOL;

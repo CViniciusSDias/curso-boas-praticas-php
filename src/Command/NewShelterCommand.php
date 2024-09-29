@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Alura\BoasPraticas\Command;
+
+use Alura\BoasPraticas\Service\HttpClient;
+use Alura\BoasPraticas\Service\ShelterService;
+
+class NewShelterCommand
+{
+    public function execute(): void
+    {
+        $httpClient = new HttpClient();
+        $shelterService = new ShelterService($httpClient);
+        $shelterService->cadastrarAbrigo();
+    }
+}
