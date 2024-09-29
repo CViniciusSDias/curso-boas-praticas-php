@@ -10,9 +10,13 @@ class ShelterService
 {
     public const string URL = 'https://66f610a1436827ced975d41f.mockapi.io/abrigos';
 
+    public function __construct(private readonly HttpClient $httpClient)
+    {
+    }
+
     public function listarAbrigos(): void
     {
-        $responseBody = file_get_contents(self::URL);
+        $responseBody = $this->httpClient->get(self::URL);
 
         $jsonArray = array_map(
             function (array $shelterArray): Shelter
@@ -42,7 +46,7 @@ class ShelterService
 
         $shelter = new Shelter($nome, $telefone, $email);
 
-        [$statusCode, $responseBody] = postRequest(self::URL, $shelter);
+        [$statusCode, $responseBody] = $this->httpClient->post(self::URL, $shelter);
 
         if ($statusCode < 400) {
             echo "Abrigo cadastrado com sucesso!" . PHP_EOL;

@@ -1,6 +1,6 @@
 <?php
 
-use Alura\BoasPraticas\Service\{PetService, ShelterService};
+use Alura\BoasPraticas\Service\{HttpClient, PetService, ShelterService};
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -16,8 +16,10 @@ try {
         echo "5 -> Sair" . PHP_EOL;
 
         $opcaoEscolhida = trim(fgets(STDIN));
-        $shelterService = new ShelterService();
-        $petService = new PetService();
+
+        $httpClient = new HttpClient();
+        $shelterService = new ShelterService($httpClient);
+        $petService = new PetService($httpClient);
 
         if ($opcaoEscolhida == 1) {
             $shelterService->listarAbrigos();
@@ -37,18 +39,4 @@ try {
     echo "Finalizando o programa..." . PHP_EOL;
 } catch (Throwable $erro) {
     echo $erro->getMessage() . PHP_EOL;
-}
-
-function postRequest(string $url, \JsonSerializable $requestBody): array
-{
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestBody));
-    curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-
-    $responseBody = curl_exec($curl);
-    $responseStatusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-    return [$responseStatusCode, $responseBody];
 }

@@ -8,11 +8,15 @@ use Alura\BoasPraticas\Domain\Pet;
 
 class PetService
 {
+    public function __construct(private readonly HttpClient $httpClient)
+    {
+    }
+
     public function listarPetsDeAbrigo(): void
     {
         echo "Digite o id do abrigo:" . PHP_EOL;
         $idOuNome = trim(fgets(STDIN));
-        $response = @file_get_contents(ShelterService::URL . "/$idOuNome/pets");
+        $response = $this->httpClient->get(ShelterService::URL . "/$idOuNome/pets");
         if (!$response) {
             echo "Id não cadastrado!" . PHP_EOL;
             // continue;
@@ -59,7 +63,7 @@ class PetService
                 weight: floatval($campos[5]),
             );
 
-            [$statusCode, $responseBody] = postRequest(
+            [$statusCode, $responseBody] = $this->httpClient->post(
                 ShelterService::URL . "/$idOuNome/pets",
                 $pet
             );
