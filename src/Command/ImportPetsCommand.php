@@ -7,7 +7,7 @@ namespace Alura\BoasPraticas\Command;
 use Alura\BoasPraticas\Service\HttpClient;
 use Alura\BoasPraticas\Service\PetService;
 
-class ImportPetsCommand
+class ImportPetsCommand implements Command
 {
     public function execute(): void
     {

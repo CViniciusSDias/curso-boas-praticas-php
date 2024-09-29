@@ -7,7 +7,7 @@ namespace Alura\BoasPraticas\Command;
 use Alura\BoasPraticas\Service\HttpClient;
 use Alura\BoasPraticas\Service\ShelterService;
 
-class ListSheltersCommand
+class ListSheltersCommand implements Command
 {
     public function execute(): void
     {
