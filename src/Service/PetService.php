@@ -19,7 +19,7 @@ class PetService
         $response = $this->httpClient->get(ShelterService::URL . "/$idOuNome/pets");
         if (!$response) {
             echo "Id não cadastrado!" . PHP_EOL;
-            // continue;
+            return;
         }
         $jsonArray = array_map(
             function (array $pet): Pet

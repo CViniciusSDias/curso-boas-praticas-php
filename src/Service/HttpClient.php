@@ -8,7 +8,12 @@ class HttpClient
 {
     public function get(string $url): string
     {
-        return @file_get_contents($url);
+        $response = @file_get_contents($url);
+        if ($response === false) {
+            $response = '';
+        }
+
+        return $response;
     }
 
     public function post(string $url, \JsonSerializable $requestBody): array
